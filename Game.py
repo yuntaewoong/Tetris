@@ -1,5 +1,7 @@
 import pygame
 import ConstValue
+import Tetrimino
+
 
 class Game:
 	'''
@@ -23,12 +25,14 @@ class Game:
 		while True:
 			self.__clock.tick(ConstValue.FRAMERATE)
 			self.__screen.fill((0,0,0))#화면 지우기
-
-			if self.__x != 600:
-				pygame.draw.rect(self.__screen,(255,0,0),pygame.Rect(10,10,self.__x,10))
-				self.__x += 1
-			else:
-				pygame.draw.rect(self.__screen,(255,255,0),pygame.Rect(10,20,300,300))
+			self.__DrawingBackGround()#백그라운드 배경(변하지않는요소그리기)
 			
 
 			pygame.display.update()#화면 그린거 반영
+	def __DrawingBackGround(self):
+		pygame.draw.rect(self.__screen,ConstValue.BOARD_COLOR,pygame.Rect(ConstValue.SCREEN_LEFT_SPACE,ConstValue.SCREEN_TOP_SPACE,ConstValue.SCREEN_BOARD_WIDTH,ConstValue.SCREEN_BOARD_HEIGHT))
+
+		pygame.draw.rect(self.__screen,ConstValue.BOARD_COLOR,pygame.Rect((ConstValue.SCREEN_LEFT_SPACE-ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT)/2,ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT))
+
+		for i in range(1,ConstValue.NUMOFVISUALMINOQUEUE+1):
+			pygame.draw.rect(self.__screen,ConstValue.BOARD_COLOR,pygame.Rect((ConstValue.SCREEN_RIGHT_SPACE-ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT)/2 + ConstValue.SCREEN_BOARD_WIDTH+ ConstValue.SCREEN_LEFT_SPACE,i * ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE + (i-1) * ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT))
