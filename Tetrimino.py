@@ -25,6 +25,7 @@ class Tetrimino:
 	#tetrimino의 회전상태
 	__tetriminoState = TetriminoState.O
 	__centerLocation = [0,0]
+	__wallKickData = {}
 	'''
 	멤버메서드
 	'''
@@ -35,21 +36,28 @@ class Tetrimino:
 		return self.__tetriminoState
 	def GetLocation(self):
 		return self.__centerLocation
-	def SetKind(self,kind):
-		self.__kind = kind
 	def SetLocation(self,vertical,horizontal):
 		location = [vertical,horizontal]
 		self.__centerLocation = location
 	#시계방향 반시계방향 설정에따라 다음 테트리미노 상태 결정
-	def SetNextState(self,rotateKind):
+	#Rotate함수들에서 사용됨(protected))
+	def _SetNextState(self,rotateKind):
 		if rotateKind == "Clockwise":
 			self.__tetriminoState = (self.__tetriminoState+1) % ConstValue.NUMOFTETRIMINOSTATE
 		elif rotateKind == "CounterClockwise":
 			self.__tetriminoState = (self.__tetriminoState-1) % ConstValue.NUMOFTETRIMINOSTATE
-	
-	
-
-
+	def _SetWallKickData(self,wallKickData):
+		self.__wallKickData = wallKickData
+	def _SetKind(self,kind):
+		self.__kind = kind
+	#테트리미노의 출력정보에 해당하는 리스트를 반환
+	#ex) O상태의 s미노의 리턴값: [
+	#	[0,1,1],
+	#	[1,1,0],
+	#	[0,0,0]	
+	#]
+	def GetPrintInfo(self):
+		pass
 	#테트리미노가 하강할 수 있다면 이동후 True반환 아니면 False반환
 	def MoveDown(self,board):
 		pass
@@ -62,20 +70,50 @@ class Tetrimino:
 		pass
 
 class Smino(Tetrimino):
-	__wallKickData = {
-		"O->R": [(0,0),(-1,0),(-1,+1),(0,-2),(-1,-2)],
-		"R->O": [(0,0),(+1,0),(+1,-1),(0,+2),(+1,+2)],
-		"R->T": [(0,0),(+1,0),(+1,-1),(0,+2),(+1,+2)],
-		"T->R": [(0,0),(-1,0),(-1,+1),(0,-2),(-1,-2)],
-		"T->L": [(0,0),(+1,0),(+1,+1),(0,-2),(+1,-2)],
-		"L->T": [(0,0),(-1,0),(-1,-1),(0,+2),(-1,+2)],
-		"L->O": [(0,0),(-1,0),(-1,-1),(0,+2),(-1,+2)],
-		"O->L": [(0,0),(+1,0),(+1,+1),(0,-2),(+1,-2)]
-	}
-
 	def __init__(self,tetriminoState,location):
-		self.SetKind("S")
-		super().__init__(self,tetriminoState,location)
+		self._SetKind("S")
+		self._SetWallKickData({
+			"O->R": [(0,0),(-1,0),(-1,+1),(0,-2),(-1,-2)],
+			"R->O": [(0,0),(+1,0),(+1,-1),(0,+2),(+1,+2)],
+			"R->T": [(0,0),(+1,0),(+1,-1),(0,+2),(+1,+2)],
+			"T->R": [(0,0),(-1,0),(-1,+1),(0,-2),(-1,-2)],
+			"T->L": [(0,0),(+1,0),(+1,+1),(0,-2),(+1,-2)],
+			"L->T": [(0,0),(-1,0),(-1,-1),(0,+2),(-1,+2)],
+			"L->O": [(0,0),(-1,0),(-1,-1),(0,+2),(-1,+2)],
+			"O->L": [(0,0),(+1,0),(+1,+1),(0,-2),(+1,-2)]
+		})
+		super().__init__(tetriminoState,location)
+	#테트리미노의 출력정보에 해당하는 리스트를 반환
+	#ex) O상태의 s미노의 리턴값: [
+	#	[0,1,1],
+	#	[1,1,0],
+	#	[0,0,0]	
+	#]
+	def GetPrintInfo(self):
+		if self.GetState() == TetriminoState.O:
+			return [
+				[0,1,1],
+				[1,1,0],
+				[0,0,0]
+			]
+		elif self.GetState() == TetriminoState.R:
+			return [
+				[0,1,0],
+				[0,1,1],
+				[0,0,1]
+			]
+		elif self.GetState() == TetriminoState.T:
+			return [
+				[0,0,0],
+				[0,1,1],
+				[1,1,0]
+			]
+		else:
+			return [
+				[1,0,0],
+				[1,1,0],
+				[0,1,0]
+			]
 	#테트리미노가 하강할 수 있다면 이동후 True반환 아니면 False반환
 	def MoveDown(self,board):
 		if self.GetState() == TetriminoState.O:
@@ -157,7 +195,7 @@ class Smino(Tetrimino):
 				#중심축 변경
 				self.SetLocation(self.GetLocation()[0] + kickTestValue[0],self.GetLocation()[1] + kickTestValue[1])
 				#회전상태 변경
-				self.SetNextState("Clockwise")
+				self._SetNextState("Clockwise")
 		else: #회전 실패
 			return False
 	#테트리미노가 반시계방향으로 회전할 수 있다면 회전후 True반환 아니면 False반환
@@ -168,6 +206,6 @@ class Smino(Tetrimino):
 				#중심축 변경
 				self.SetLocation(self.GetLocation()[0] + kickTestValue[0],self.GetLocation()[1] + kickTestValue[1])
 				#회전상태 변경
-				self.SetNextState("Clockwise")
+				self._SetNextState("Clockwise")
 		else: #회전 실패
 			return False
