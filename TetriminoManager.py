@@ -6,6 +6,7 @@ import ConstValue
 import random
 
 import pdb
+
 class TetriminoManager:
 	__tetriminoQueue = []
 	__tetriminoBag = []
@@ -21,7 +22,9 @@ class TetriminoManager:
 		self.__tetriminoBag = [Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION)]
 
 		random.shuffle(self.__tetriminoBag)
-
+	#manager밖에서 테트리미노를 조작할수있게함
+	def GetPresentMino(self):
+		return self.__tetriminoQueue[0]
 	def EnqueueTetrimino(self):
 		self.__tetriminoQueue.append(self.__tetriminoBag[0])
 		del self.__tetriminoBag[0]
