@@ -1,11 +1,12 @@
 import ConstValue
 import pdb
+from BoardManager import BoardState #BoardState enum사용위해서
 from enum import IntEnum
 class TetriminoState(IntEnum):
-	O = 1
-	R = 2 
-	T = 3
-	L = 4
+	O = 0
+	R = 1 
+	T = 2
+	L = 3
 def TetriminoState2Str(tetriminoState):
 	if tetriminoState == TetriminoState.O:
 		return 'O'
@@ -40,7 +41,30 @@ class Tetrimino:
 	def SetLocation(self,vertical,horizontal):
 		location = [vertical,horizontal]
 		self.__centerLocation = location
-
+	#테트리미노의 출력정보에 해당하는 리스트를 반환
+	#ex) O상태의 s미노의 리턴값: [
+	#	[0,1,1],
+	#	[1,1,0],
+	#	[0,0,0]	
+	#]
+	def GetPrintInfo(self):
+		pass
+	#테트리미노가 하강할 수 있다면 이동후 True반환 아니면 False반환
+	def MoveDown(self,board):
+		pass
+	#테트리미노가 왼쪽으로 이동할 수 있다면 이동후 True반환 아니면 False반환
+	def MoveLeft(self,board):
+		pass
+	#테트리미노가 오른쪽으로 이동할 수 있다면 이동후 True반환 아니면 False반환
+	def MoveRight(self,board):
+		pass
+	#테트리미노가 회전할 수 있다면 회전후 True반환 아니면 False반환
+	#테트리미노의 회전알고리즘은 SRS알고리즘을 따름
+	#참조: https://tetris.wiki/Super_Rotation_System
+	def ClockwiseRotate(self,board):
+		pass
+	def CounterClockwiseRotate(self,board):
+		pass
 	def _GetWallKickData(self):
 		return self.__wallKickData
 	#시계방향 반시계방향 설정에따라 다음 테트리미노 상태 결정
@@ -54,24 +78,6 @@ class Tetrimino:
 		self.__wallKickData = wallKickData
 	def _SetKind(self,kind):
 		self.__kind = kind
-	#테트리미노의 출력정보에 해당하는 리스트를 반환
-	#ex) O상태의 s미노의 리턴값: [
-	#	[0,1,1],
-	#	[1,1,0],
-	#	[0,0,0]	
-	#]
-	def GetPrintInfo(self):
-		pass
-	#테트리미노가 하강할 수 있다면 이동후 True반환 아니면 False반환
-	def MoveDown(self,board):
-		pass
-	#테트리미노가 회전할 수 있다면 회전후 True반환 아니면 False반환
-	#테트리미노의 회전알고리즘은 SRS알고리즘을 따름
-	#참조: https://tetris.wiki/Super_Rotation_System
-	def ClockwiseRotate(self,board):
-		pass
-	def CounterClockwiseRotate(self,board):
-		pass
 
 class Smino(Tetrimino):
 	def __init__(self,tetriminoState,location):
@@ -122,26 +128,76 @@ class Smino(Tetrimino):
 	def MoveDown(self,board):
 		if self.GetState() == TetriminoState.O:
 			centerLocation = self.GetLocation()
-			if board[centerLocation[0]+1][centerLocation[1]-1] == 0 and board[centerLocation[0]+1][centerLocation[1]] == 0 and board[centerLocation[0]][centerLocation[1]+1] == 0:
+			if board[centerLocation[0]+1][centerLocation[1]-1] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]] == BoardState.EMPTY and board[centerLocation[0]][centerLocation[1]+1] == BoardState.EMPTY:
 				self.SetLocation(centerLocation[0]+1,centerLocation[1])
 				return True 
 		elif self.GetState() == TetriminoState.R:
 			centerLocation = self.GetLocation()
-			if board[centerLocation[0]+1][centerLocation[1]] == 0 and board[centerLocation[0]+1][centerLocation[1]+2] == 0:
+			if board[centerLocation[0]+1][centerLocation[1]] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]+2] == BoardState.EMPTY:
 				self.SetLocation(centerLocation[0]+1,centerLocation[1])
 				return True
 		elif self.GetState() == TetriminoState.T:
 			centerLocation = self.GetLocation()
-			if board[centerLocation[0]+2][centerLocation[1]-1] == 0 and board[centerLocation[0]+2][centerLocation[1]] == 0 and board[centerLocation[0]+1][centerLocation[1]+1] == 0:
+			if board[centerLocation[0]+2][centerLocation[1]-1] == BoardState.EMPTY and board[centerLocation[0]+2][centerLocation[1]] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]+1] == BoardState.EMPTY:
 				self.SetLocation(centerLocation[0]+1,centerLocation[1])
 				return True
 		else:
 			centerLocation = self.GetLocation()
-			if board[centerLocation[0]+1][centerLocation[1]-1] == 0 and board[centerLocation[0]+2][centerLocation[1]] == 0:
+			if board[centerLocation[0]+1][centerLocation[1]-1] == BoardState.EMPTY and board[centerLocation[0]+2][centerLocation[1]] == BoardState.EMPTY:
 				self.SetLocation(centerLocation[0]+1,centerLocation[1])
 				return True
 		#이동에 성공 못할시 False
 		return False
+	#테트리미노가 왼쪽으로 이동할 수 있다면 이동후 True반환 아니면 False반환
+	def MoveLeft(self,board):
+		if self.GetState() == TetriminoState.O:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]][centerLocation[1]-2] == BoardState.EMPTY and board[centerLocation[0]-1][centerLocation[1]-1] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]-1)
+				return True 
+		elif self.GetState() == TetriminoState.R:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]][centerLocation[1]-1] == BoardState.EMPTY and board[centerLocation[0]-1][centerLocation[1]-1] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]-1)
+				return True
+		elif self.GetState() == TetriminoState.T:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]][centerLocation[1]-1] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]-2] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]-1)
+				return True
+		else:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]-1][centerLocation[1]-2] == BoardState.EMPTY and board[centerLocation[0]][centerLocation[1]-2] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]-1] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]-1)
+				return True
+		#이동에 성공 못할시 False
+		return False
+	#테트리미노가 오른쪽으로 이동할 수 있다면 이동후 True반환 아니면 False반환
+	def MoveRight(self,board):
+		if self.GetState() == TetriminoState.O:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]-1][centerLocation[1]+2] == BoardState.EMPTY and board[centerLocation[0]][centerLocation[1]+1] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]+1)
+				return True 
+		elif self.GetState() == TetriminoState.R:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]-1][centerLocation[1]+1] == BoardState.EMPTY and board[centerLocation[0]][centerLocation[1]+2] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]+2] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]+1)
+				return True
+		elif self.GetState() == TetriminoState.T:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]][centerLocation[1]+2] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]+1] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]+1)
+				return True
+		else:
+			centerLocation = self.GetLocation()
+			if board[centerLocation[0]-1][centerLocation[1]] == BoardState.EMPTY and board[centerLocation[0]][centerLocation[1]+1] == BoardState.EMPTY and board[centerLocation[0]+1][centerLocation[1]+1] == BoardState.EMPTY:
+				self.SetLocation(centerLocation[0],centerLocation[1]+1)
+				return True
+		#이동에 성공 못할시 False
+		return False
+
+
 	#kick되었을때 그곳에 존재할수 있는지 검사
 	#존재할수 있다면 True 아니면 False
 	#__WallKickTest함수에서 사용
@@ -151,16 +207,16 @@ class Smino(Tetrimino):
 			self.GetLocation()[1] + goalHorizontal
 		)
 		if goalState == TetriminoState.O:
-			if board[goalCenterLocation[0]][goalCenterLocation[1]-1] == 0 and board[goalCenterLocation[0]][goalCenterLocation[1]] == 0 and board[goalCenterLocation[0]-1][goalCenterLocation[1]] == 0 and board[goalCenterLocation[0]-1][goalCenterLocation[1] + 1] == 0:
+			if board[goalCenterLocation[0]][goalCenterLocation[1]-1] == BoardState.EMPTY and board[goalCenterLocation[0]][goalCenterLocation[1]] == BoardState.EMPTY and board[goalCenterLocation[0]-1][goalCenterLocation[1]] == BoardState.EMPTY and board[goalCenterLocation[0]-1][goalCenterLocation[1] + 1] == BoardState.EMPTY:
 				return True  
 		elif goalState == TetriminoState.R:
-			if board[goalCenterLocation[0]-1][goalCenterLocation[1]] == 0 and board[goalCenterLocation[0]][goalCenterLocation[1]] == 0 and board[goalCenterLocation[0]][goalCenterLocation[1]+1] == 0 and board[goalCenterLocation[0]+1][goalCenterLocation[1] + 1] == 0:
+			if board[goalCenterLocation[0]-1][goalCenterLocation[1]] == BoardState.EMPTY and board[goalCenterLocation[0]][goalCenterLocation[1]] == BoardState.EMPTY and board[goalCenterLocation[0]][goalCenterLocation[1]+1] == BoardState.EMPTY and board[goalCenterLocation[0]+1][goalCenterLocation[1] + 1] == BoardState.EMPTY:
 				return True
 		elif goalState == TetriminoState.T:
-			if board[goalCenterLocation[0]+1][goalCenterLocation[1]-1] == 0 and board[goalCenterLocation[0]][goalCenterLocation[1]] == 0 and board[goalCenterLocation[0]+1][goalCenterLocation[1]] == 0 and board[goalCenterLocation[0]][goalCenterLocation[1] + 1] == 0:
+			if board[goalCenterLocation[0]+1][goalCenterLocation[1]-1] == BoardState.EMPTY and board[goalCenterLocation[0]][goalCenterLocation[1]] == BoardState.EMPTY and board[goalCenterLocation[0]+1][goalCenterLocation[1]] == BoardState.EMPTY and board[goalCenterLocation[0]][goalCenterLocation[1] + 1] == BoardState.EMPTY:
 				return True
 		else:
-			if board[goalCenterLocation[0]-1][goalCenterLocation[1]-1] == 0 and board[goalCenterLocation[0]][goalCenterLocation[1]-1] == 0 and board[goalCenterLocation[0]][goalCenterLocation[1]] == 0 and board[goalCenterLocation[0]+1][goalCenterLocation[1]] == 0:
+			if board[goalCenterLocation[0]-1][goalCenterLocation[1]-1] == BoardState.EMPTY and board[goalCenterLocation[0]][goalCenterLocation[1]-1] == BoardState.EMPTY and board[goalCenterLocation[0]][goalCenterLocation[1]] == BoardState.EMPTY and board[goalCenterLocation[0]+1][goalCenterLocation[1]] == BoardState.EMPTY:
 				return True
 		return False
 	#presentState를 goalState로 바꾸는 과정에서 5가지 테스트케이스를 테스트후
@@ -176,24 +232,25 @@ class Smino(Tetrimino):
 		if rotateKind == "Clockwise" and self.GetState() == TetriminoState.O:
 			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
 		elif rotateKind == "Clockwise" and self.GetState() == TetriminoState.R:
-			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
+			return self.__5TestCaseTest(TetriminoState.R,TetriminoState.T,board)
 		elif rotateKind == "Clockwise" and self.GetState() == TetriminoState.T:
-			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
+			return self.__5TestCaseTest(TetriminoState.T,TetriminoState.L,board)
 		elif rotateKind == "Clockwise" and self.GetState() == TetriminoState.L:
-			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
+			return self.__5TestCaseTest(TetriminoState.L,TetriminoState.O,board)
 		elif rotateKind == "CounterClockwise" and self.GetState() == TetriminoState.O:
-			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
+			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.L,board)
 		elif rotateKind == "CounterClockwise" and self.GetState() == TetriminoState.R:
-			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
+			return self.__5TestCaseTest(TetriminoState.R,TetriminoState.O,board)
 		elif rotateKind == "CounterClockwise" and self.GetState() == TetriminoState.T:
-			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
+			return self.__5TestCaseTest(TetriminoState.T,TetriminoState.R,board)
 		elif rotateKind == "CounterClockwise" and self.GetState() == TetriminoState.L:
-			return self.__5TestCaseTest(TetriminoState.O,TetriminoState.R,board)
+			return self.__5TestCaseTest(TetriminoState.L,TetriminoState.T,board)
 		return ConstValue.FAILTUPLE
 
 	#테트리미노가 시계방향으로 회전할 수 있다면 회전후 True반환 아니면 False반환
 	def ClockwiseRotate(self,board):
 		kickTestValue = self.__WallKickTest(board,"Clockwise")
+		print(kickTestValue)
 		
 		if kickTestValue != ConstValue.FAILTUPLE:#회전 성공
 				#중심축 변경
@@ -205,7 +262,7 @@ class Smino(Tetrimino):
 	#테트리미노가 반시계방향으로 회전할 수 있다면 회전후 True반환 아니면 False반환
 	def CounterClockwiseRotate(self,board):
 		kickTestValue = self.__WallKickTest(board,"CounterClockwise")
-		
+		print(kickTestValue)
 		if kickTestValue != ConstValue.FAILTUPLE:#회전 성공
 				#중심축 변경
 				self.SetLocation(self.GetLocation()[0] + kickTestValue[0],self.GetLocation()[1] + kickTestValue[1])

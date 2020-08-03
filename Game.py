@@ -1,15 +1,17 @@
 import pygame
 import ConstValue
 import TetriminoManager
+import BoardManager
+import pdb
 
 class Game:
 	'''
 	멤버변수
 	'''
-	__x = 0
 	__clock = 0
 	__screen = 0
 	__tetriminoManager = 0
+	__boardManager = 0
 	'''
 	멤버함수
 	'''
@@ -17,66 +19,44 @@ class Game:
 		pygame.init()
 		pygame.display.set_caption(ConstValue.CAPTION)
 		self.__screen = pygame.display.set_mode((ConstValue.SCREEN_WIDTH, ConstValue.SCREEN_HEIGHT))
-		self.__x = 10
 		self.__clock = pygame.time.Clock()
 		self.__tetriminoManager = TetriminoManager.TetriminoManager()
+		self.__boardManager = BoardManager.BoardManager() 
 		self.__UpdateLoop()
-	asd = False
 	def __UpdateLoop(self):
 		while True:
 			self.__clock.tick(ConstValue.FRAMERATE)
 			self.__screen.fill((0,0,0))#화면 지우기
 			self.__DrawingBackGround()#백그라운드 배경(변하지않는요소그리기)
+			
+			
+			
 			self.__tetriminoManager.PrintPresentTetrimino(self.__screen)
-			if self.asd == False:
-				self.__tetriminoManager.GetPresentMino().MoveDown([
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-				])
-				self.__tetriminoManager.GetPresentMino().CounterClockwiseRotate([
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-					[0,0,0,0,0,0,0,0,0,0,0,0],
-				])
-				self.asd = True
-
-
+			self.__boardManager.PrintBoard(self.__screen)
+			
+			self.__KeyboardInputProcess(self.__tetriminoManager.GetPresentMino(),self.__boardManager.GetBoard())
+			
 			pygame.display.update()#화면 그린거 반영
+
+
+
+
+	def __KeyboardInputProcess(self,presentTetrimino,presentBoard):
+		for event in pygame.event.get():
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_DOWN:
+					presentTetrimino.MoveDown(presentBoard)
+				elif event.key == pygame.K_RIGHT:
+					presentTetrimino.MoveRight(presentBoard)
+				elif event.key == pygame.K_LEFT:
+					presentTetrimino.MoveLeft(presentBoard)
+				elif event.key == pygame.K_z:
+					presentTetrimino.CounterClockwiseRotate(presentBoard)
+				elif event.key == pygame.K_x:
+					presentTetrimino.ClockwiseRotate(presentBoard)
+					
+				
+	
 	def __DrawingBackGround(self):
 		#게임을 하는 메인 보드 뷰
 		pygame.draw.rect(self.__screen,ConstValue.BOARD_COLOR,pygame.Rect(ConstValue.SCREEN_LEFT_SPACE,ConstValue.SCREEN_TOP_SPACE,ConstValue.SCREEN_BOARD_WIDTH,ConstValue.SCREEN_BOARD_HEIGHT))

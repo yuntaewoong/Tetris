@@ -30,7 +30,7 @@ class TetriminoManager:
 		del self.__tetriminoBag[0]
 
 		self.ResetBag()#만약 가방에 있는걸 다쓰면 가방을 초기화
-	#location에 해당하는 실제 화면의 좌표를 return
+	#인자 location에 해당하는 실제 화면의 좌표를 return
 	def __Location2Screen(self,location):
 		return (
 			ConstValue.SCREEN_LEFT_SPACE + location[1] * ConstValue.SCREEN_MINO_WIDTH,
@@ -42,10 +42,10 @@ class TetriminoManager:
 		centerLocation = self.__tetriminoQueue[0].GetLocation()
 		printList = self.__tetriminoQueue[0].GetPrintInfo()
 
-		leftTopLocation = (centerLocation[0] - len(printList)//2 , centerLocation[1] - len(printList[0])//2)
+		topLeftLocation = (centerLocation[0] - len(printList)//2 , centerLocation[1] - len(printList[0])//2)
 
 		#pdb.set_trace()
 		for i in range(0,len(printList)):
 			for j in range(0,len(printList[i])):
 				if printList[i][j] == 1:
-					pygame.draw.rect(screen,ConstValue.SMINO_COLOR,pygame.Rect(self.__Location2Screen((leftTopLocation[0]+i,leftTopLocation[1]+j)),(ConstValue.SCREEN_MINO_WIDTH,ConstValue.SCREEN_MINO_HEIGHT)))
+					pygame.draw.rect(screen,ConstValue.SMINO_COLOR,pygame.Rect(self.__Location2Screen((topLeftLocation[0]+i-2,topLeftLocation[1]+j-ConstValue.EXTRABOARDWIDTH//2)),(ConstValue.SCREEN_MINO_WIDTH,ConstValue.SCREEN_MINO_HEIGHT)))
