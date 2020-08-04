@@ -12,6 +12,8 @@ class Game:
 	__screen = 0
 	__tetriminoManager = 0
 	__boardManager = 0
+	__pressedKey = 0
+	__pressedFrame = 0
 	'''
 	멤버함수
 	'''
@@ -40,20 +42,45 @@ class Game:
 
 
 
-
+	def __pressedKeyChecking(self,KEY):
+		if self.__pressedKey == KEY:
+				self.__pressedFrame = self.__pressedFrame + 1
+		else:
+			self.__pressedFrame = 0
 	def __KeyboardInputProcess(self,presentTetrimino,presentBoard):
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_DOWN:
+					self.__pressedKey = pygame.K_DOWN
 					presentTetrimino.MoveDown(presentBoard)
 				elif event.key == pygame.K_RIGHT:
+					self.__pressedKey = pygame.K_RIGHT
 					presentTetrimino.MoveRight(presentBoard)
 				elif event.key == pygame.K_LEFT:
+					self.__pressedKey = pygame.K_LEFT
 					presentTetrimino.MoveLeft(presentBoard)
 				elif event.key == pygame.K_z:
 					presentTetrimino.CounterClockwiseRotate(presentBoard)
 				elif event.key == pygame.K_x:
 					presentTetrimino.ClockwiseRotate(presentBoard)
+
+		if pygame.key.get_pressed()[pygame.K_DOWN]:
+			#soft drop
+			self.__pressedKeyChecking(pygame.K_DOWN)
+			if self.__pressedFrame % ConstValue.SOFT_DROP_DELAY_FRAME == 0:
+					presentTetrimino.MoveDown(presentBoard)
+		elif pygame.key.get_pressed()[pygame.K_RIGHT]:
+			self.__pressedKeyChecking(pygame.K_RIGHT)
+			if self.__pressedFrame > ConstValue.SOFT_MOVE_LIMIT_FRAME and self.__pressedFrame % ConstValue.SOFT_MOVE_DELAY_FRAME == 0:
+				presentTetrimino.MoveRight(presentBoard)
+		elif pygame.key.get_pressed()[pygame.K_LEFT]:
+			self.__pressedKeyChecking(pygame.K_LEFT)
+			if self.__pressedFrame > ConstValue.SOFT_MOVE_LIMIT_FRAME and self.__pressedFrame % ConstValue.SOFT_MOVE_DELAY_FRAME == 0:
+				presentTetrimino.MoveLeft(presentBoard)
+		else:
+			self.__pressedFrame = 0
+		print(self.__pressedFrame)
+			
 					
 				
 	

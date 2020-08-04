@@ -35,5 +35,8 @@ TMINO_COLOR = (149,45,152)
 
 TETRIMINO_DROP_SPEED = 0
 
+SOFT_MOVE_LIMIT_FRAME = 20 # 한 방향키를 꾹 눌렀을때 블럭이 빠르게 이동하기 시작하는데까지 필요한 임계 프레임수
+SOFT_MOVE_DELAY_FRAME = 5# 소프트 이동시 MoveLeft,MoveRight함수가 호출될 프레임 간격
+SOFT_DROP_DELAY_FRAME = 5# 소프트드랍시 MoveDown함수가 호출될 프레임 간격
 
 
