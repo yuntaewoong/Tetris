@@ -32,24 +32,25 @@ class BoardManager:
 	def GetBoard(self):
 		return self.__board
 	#board에 mino를 쌓음
-	def StackingMino(self,topLeftLocation,printInfo,color):
+	def StackingMino(self,centerLocation,printInfo,color):
 		for i in range(0,len(printInfo)):
 			for j in range(0,len(printInfo[i])):
 				if printInfo[i][j] == 1:
 					if color == ConstValue.IMINO_COLOR:
-						self.__board[i+topLeftLocation[0]][j+topLeftLocation[1]] = BoardState.IFILLED
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.IFILLED
 					elif color == ConstValue.LMINO_COLOR:
-						self.__board[i+topLeftLocation[0]][j+topLeftLocation[1]] = BoardState.LFILLED
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.LFILLED
 					elif color == ConstValue.JMINO_COLOR:
-						self.__board[i+topLeftLocation[0]][j+topLeftLocation[1]] = BoardState.JFILLED
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.JFILLED
 					elif color == ConstValue.SMINO_COLOR:
-						self.__board[i+topLeftLocation[0]][j+topLeftLocation[1]] = BoardState.SFILLED
+						print((i+centerLocation[0]-len(printInfo)//2,j+centerLocation[1]-len(printInfo)//2))
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.SFILLED
 					elif color == ConstValue.ZMINO_COLOR:
-						self.__board[i+topLeftLocation[0]][j+topLeftLocation[1]] = BoardState.ZFILLED
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.ZFILLED
 					elif color == ConstValue.TMINO_COLOR:
-						self.__board[i+topLeftLocation[0]][j+topLeftLocation[1]] = BoardState.TFILLED
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.TFILLED
 					elif color == ConstValue.OMINO_COLOR:
-						self.__board[i+topLeftLocation[0]][j+topLeftLocation[1]] = BoardState.OFILLED	
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.OFILLED	
 	#꽉찬 줄이 있는지 검사,
 	#만약 꽉찬 줄이 하나라도 존재할시 그 줄을 삭제하고 맨위에 새로운 줄을 추가
 	#삭제한 줄 위에 있는 줄들을 한줄씩 내림
@@ -100,8 +101,6 @@ class BoardManager:
 	#인자 location에 해당하는 실제 화면의 좌표를 return
 	def __Location2Screen(self,location):
 		return (
-			ConstValue.SCREEN_LEFT_SPACE + location[1] * ConstValue.SCREEN_MINO_WIDTH,
-			ConstValue.SCREEN_TOP_SPACE + location[0] * ConstValue.SCREEN_MINO_HEIGHT
-		)
-
- 
+			ConstValue.SCREEN_LEFT_SPACE + (location[1]-ConstValue.EXTRABOARDWIDTH/2) * ConstValue.SCREEN_MINO_WIDTH,
+			ConstValue.SCREEN_TOP_SPACE + (location[0]-ConstValue.EXTRABOARDHEIGHT+1) * ConstValue.SCREEN_MINO_HEIGHT
+			)

@@ -35,8 +35,10 @@ TMINO_COLOR = (149,45,152)
 
 TETRIMINO_DROP_SPEED = 0
 
-SOFT_MOVE_LIMIT_FRAME = 20 # 한 방향키를 꾹 눌렀을때 블럭이 빠르게 이동하기 시작하는데까지 필요한 임계 프레임수
+SOFT_MOVE_LIMIT_FRAME = 60 # 한 방향키를 꾹 눌렀을때 블럭이 빠르게 이동하기 시작하는데까지 필요한 임계 프레임수
 SOFT_MOVE_DELAY_FRAME = 5# 소프트 이동시 MoveLeft,MoveRight함수가 호출될 프레임 간격
 SOFT_DROP_DELAY_FRAME = 5# 소프트드랍시 MoveDown함수가 호출될 프레임 간격
+AUTO_MOVE_DELAY_FRAME = 40# 자동으로 미노가 내려가는 프레임 간격
+STACKING_DELAY_FRAME = 60# 미노가 바닥에 붙고 스태킹될때까지 걸리는 프레임간격
 
 

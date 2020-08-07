@@ -19,12 +19,14 @@ class TetriminoManager:
 	def ResetBag(self):
 		if self.__tetriminoBag:
 			return #가방이 안비었으면 실행 x
-		self.__tetriminoBag = [Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION)]
+		self.__tetriminoBag = [Tetrimino.Smino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Zmino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Lmino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Jmino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Tmino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Omino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION),Tetrimino.Imino(Tetrimino.TetriminoState.O,ConstValue.FIRSTLOCATION)]
 
 		random.shuffle(self.__tetriminoBag)
 	#manager밖에서 테트리미노를 조작할수있게함
 	def GetPresentMino(self):
 		return self.__tetriminoQueue[0]
+	def DequeueTetrimino(self):
+		del self.__tetriminoQueue[0]
 	def EnqueueTetrimino(self):
 		self.__tetriminoQueue.append(self.__tetriminoBag[0])
 		del self.__tetriminoBag[0]
@@ -48,4 +50,4 @@ class TetriminoManager:
 		for i in range(0,len(printList)):
 			for j in range(0,len(printList[i])):
 				if printList[i][j] == 1:
-					pygame.draw.rect(screen,ConstValue.SMINO_COLOR,pygame.Rect(self.__Location2Screen((topLeftLocation[0]+i-2,topLeftLocation[1]+j-ConstValue.EXTRABOARDWIDTH//2)),(ConstValue.SCREEN_MINO_WIDTH,ConstValue.SCREEN_MINO_HEIGHT)))
+					pygame.draw.rect(screen,self.__tetriminoQueue[0].GetColor(),pygame.Rect(self.__Location2Screen((topLeftLocation[0]+i-2,topLeftLocation[1]+j-ConstValue.EXTRABOARDWIDTH//2)),(ConstValue.SCREEN_MINO_WIDTH,ConstValue.SCREEN_MINO_HEIGHT)))
