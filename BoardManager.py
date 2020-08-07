@@ -50,36 +50,33 @@ class BoardManager:
 					elif color == ConstValue.TMINO_COLOR:
 						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.TFILLED
 					elif color == ConstValue.OMINO_COLOR:
-						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.OFILLED	
-	#꽉찬 줄이 있는지 검사,
-	#만약 꽉찬 줄이 하나라도 존재할시 그 줄을 삭제하고 맨위에 새로운 줄을 추가
-	#삭제한 줄 위에 있는 줄들을 한줄씩 내림
-	def ClearLine(self):
-		rowsTodelete = []
-		numOfFilledInRow = 0
-		#지워야할 줄을 탐색
+						self.__board[i+centerLocation[0]-len(printInfo)//2][j+centerLocation[1]-len(printInfo)//2] = BoardState.OFILLED
+	def __FindToDeleteRows(self):
+		rowsToDelete = []
 		for i in range(0,len(self.__board)):
-			for j in range(0,len(self.__board)):
-				if self.__board[i][j] != BoardState.EMPTY or self.__board[i][j] != BoardState.WALL:
+			numOfFilledInRow = 0
+			for j in range(0,len(self.__board[i])):
+				if self.__board[i][j] != BoardState.EMPTY and self.__board[i][j] != BoardState.WALL:
 					numOfFilledInRow = numOfFilledInRow + 1
 			if numOfFilledInRow == ConstValue.BOARDWIDTH:
-				rowsTodelete.append(i)
-		#지우기
+				rowsToDelete.append(i)
+		return rowsToDelete
+	def __DeleteLine(self,rowsTodelete):
 		for i in rowsTodelete:
 			del self.__board[i]
-		
-		#지운만큼 맨위에 행추가
-		for i in range(0,len(rowsTodelete)):
+	def __AddNewLinesOnTop(self,numOfLines):
+		for i in range(0,numOfLines):
 			newRow = []
-			#추가할 행 제작
 			for i in range(0,ConstValue.BOARDWIDTH+ConstValue.EXTRABOARDWIDTH):
 				if i == 0 or i == ConstValue.BOARDWIDTH+ConstValue.EXTRABOARDWIDTH - 1:
 					newRow.append(BoardState.WALL)
 				else:
 					newRow.append(BoardState.EMPTY)
-			#행추가(맨첫음행으로 추가한다)
 			self.__board.insert(0,newRow)
-
+	def ClearLine(self):
+		rowsToDelete = self.__FindToDeleteRows()	
+		self.__DeleteLine(rowsToDelete)
+		self.__AddNewLinesOnTop(len(rowsToDelete))
 	#__board의 내용물을 출력함
 	def PrintBoard(self,screen):
 		for i in range(0,len(self.__board)):

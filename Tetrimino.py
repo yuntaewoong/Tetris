@@ -51,11 +51,13 @@ class Tetrimino:
 		return self.__centerLocation
 	def GetColor(self):
 		pass
-	def IsStackingPossible(self):
-		return self.__untilStackingFrame == ConstValue.STACKING_DELAY_FRAME
+	def IsStackingPossible(self,board):
+		return self.__untilStackingFrame >= ConstValue.STACKING_DELAY_FRAME and not self.IsMovingDownPossible(board) 
 	def SetLocation(self,vertical,horizontal):
 		location = [vertical,horizontal]
 		self.__centerLocation = location
+	def SetHardDrop(self):#하드드롭은 바로 스태킹할수 있도록 함
+		self.__untilStackingFrame = ConstValue.STACKING_DELAY_FRAME
 	def __SetState(self,tetriminoState):
 			self.__tetriminoState = tetriminoState
 	#자식 클래스에서 __wallkickData를 초기화하는데 사용

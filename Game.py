@@ -38,11 +38,13 @@ class Game:
 			self.__AutoMoveDown(self.__tetriminoManager.GetPresentMino(),self.__boardManager.GetBoard())#일정 프레임마다 자동으로 미노가 하강함
 			self.__tetriminoManager.GetPresentMino().TetriminoUpdate(self.__boardManager.GetBoard())#현재 테트리미노의 세부정보 업데이트(__untilStackingFrame))
 			self.__StackingIfPossible(self.__tetriminoManager.GetPresentMino(),self.__tetriminoManager,self.__boardManager)#스태킹 할수 있다면 함
+			self.__boardManager.ClearLine()
+			
 			pygame.display.update()#화면 그린거 반영
 	#테트리미노가 스태킹이 가능한상태라면 TetriminoManager에서는 현재 미노를 삭제후 다음미노를 보드에 출현시키고
 	#BoardManager에서는 board에 현재 미노를 추가한다
 	def __StackingIfPossible(self,presentTetrimino,tetriminoManager,boardManager):
-		if presentTetrimino.IsStackingPossible():
+		if presentTetrimino.IsStackingPossible(boardManager.GetBoard()):
 			boardManager.StackingMino(presentTetrimino.GetLocation(),presentTetrimino.GetPrintInfo(),presentTetrimino.GetColor())#board에 추가
 			tetriminoManager.DequeueTetrimino() #현재 블록을 tetriminoManager에서 삭제
 			tetriminoManager.EnqueueTetrimino() #대기 블록을 하나 추가
@@ -55,6 +57,7 @@ class Game:
 		else:
 			self.__pressedFrame = 0
 	def __HardDrop(self,presentTetrimino,presentBoard):
+		presentTetrimino.SetHardDrop()
 		while presentTetrimino.IsMovingDownPossible(presentBoard) == True:
 			presentTetrimino.MoveDown(presentBoard)
 	def __KeyboardInputProcess(self,presentTetrimino,presentBoard):
