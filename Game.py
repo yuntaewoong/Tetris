@@ -31,6 +31,8 @@ class Game:
 			self.__clock.tick(ConstValue.FRAMERATE)#초당 프레임수 설정
 			self.__screen.fill((0,0,0))#화면 지우기
 			self.__DrawingBackGround()#백그라운드 배경(변하지않는요소그리기)
+			self.__tetriminoManager.PrintHoldTetrimino(self.__screen)
+			self.__tetriminoManager.PrintTetriminoQueue(self.__screen)
 			self.__gameFrame = self.__gameFrame + 1#게임의 프레임수(자동 이동에 쓰임)
 			self.__tetriminoManager.PrintPresentTetrimino(self.__screen)#현재 조작하는 테트리미노를 출력
 			self.__boardManager.PrintBoard(self.__screen)#쌓여있는 Board를 출력
@@ -76,6 +78,8 @@ class Game:
 					presentTetrimino.CounterClockwiseRotate(presentBoard)
 				elif event.key == pygame.K_x:
 					presentTetrimino.ClockwiseRotate(presentBoard)	
+				elif event.key == pygame.K_c:
+					self.__tetriminoManager.HoldTetrimino(presentTetrimino)
 				elif event.key == pygame.K_SPACE:
 					self.__HardDrop(presentTetrimino,presentBoard)
 		if pygame.key.get_pressed()[pygame.K_DOWN]:
@@ -97,9 +101,5 @@ class Game:
 		#게임을 하는 메인 보드 뷰
 		pygame.draw.rect(self.__screen,ConstValue.BOARD_COLOR,pygame.Rect(ConstValue.SCREEN_LEFT_SPACE,ConstValue.SCREEN_TOP_SPACE,ConstValue.SCREEN_BOARD_WIDTH,ConstValue.SCREEN_BOARD_HEIGHT))
 
-		#홀드해놓은 미노를 표시하는 뷰
-		pygame.draw.rect(self.__screen,ConstValue.BOARD_COLOR,pygame.Rect((ConstValue.SCREEN_LEFT_SPACE-ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT)/2,ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT))
-
-		#대기중인 테트리미노를 표시하는 뷰
-		for i in range(1,ConstValue.NUMOFVISUALMINOQUEUE+1):
-			pygame.draw.rect(self.__screen,ConstValue.BOARD_COLOR,pygame.Rect((ConstValue.SCREEN_RIGHT_SPACE-ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT)/2 + ConstValue.SCREEN_BOARD_WIDTH+ ConstValue.SCREEN_LEFT_SPACE,i * ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE + (i-1) * ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT))
+		
+		

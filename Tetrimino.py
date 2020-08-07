@@ -29,6 +29,7 @@ class Tetrimino:
 	__centerLocation = [0,0]
 	__wallKickData = {}
 	__untilStackingFrame = 0
+	__isHoldPossible = True
 	'''
 	멤버메서드
 	'''
@@ -51,6 +52,8 @@ class Tetrimino:
 		return self.__centerLocation
 	def GetColor(self):
 		pass
+	def GetIsHoldPossible(self):
+		return self.__isHoldPossible
 	def IsStackingPossible(self,board):
 		return self.__untilStackingFrame >= ConstValue.STACKING_DELAY_FRAME and not self.IsMovingDownPossible(board) 
 	def SetLocation(self,vertical,horizontal):
@@ -58,17 +61,13 @@ class Tetrimino:
 		self.__centerLocation = location
 	def SetHardDrop(self):#하드드롭은 바로 스태킹할수 있도록 함
 		self.__untilStackingFrame = ConstValue.STACKING_DELAY_FRAME
+	def SetIsHoldPossible(self,isHoldPossible):
+		self.__isHoldPossible = isHoldPossible
 	def __SetState(self,tetriminoState):
 			self.__tetriminoState = tetriminoState
 	#자식 클래스에서 __wallkickData를 초기화하는데 사용
 	def _SetWallKickData(self,wallKickData):
 		self.__wallKickData = wallKickData
-	#테트리미노의 출력정보에 해당하는 리스트를 반환
-	#ex) O상태의 s미노의 리턴값: [
-	#	[0,1,1],
-	#	[1,1,0],
-	#	[0,0,0]	
-	#]
 	#TetriminoUpdate는 매프레임 필수로 호출되어야함
 	def TetriminoUpdate(self,board):
 		self.__UpdateUntilStackingFrame(board)

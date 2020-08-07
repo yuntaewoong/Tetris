@@ -62,8 +62,10 @@ class BoardManager:
 				rowsToDelete.append(i)
 		return rowsToDelete
 	def __DeleteLine(self,rowsTodelete):
+		numOfDeletedLines = 0
 		for i in rowsTodelete:
-			del self.__board[i]
+			del self.__board[i-numOfDeletedLines]#행을 지울때마다 원래index보다 하나씩 더 줄어든 인덱스를 지워야함
+			numOfDeletedLines += 1 
 	def __AddNewLinesOnTop(self,numOfLines):
 		for i in range(0,numOfLines):
 			newRow = []
