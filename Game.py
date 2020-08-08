@@ -33,6 +33,7 @@ class Game:
 			self.__DrawingBackGround()#백그라운드 배경(변하지않는요소그리기)
 			self.__tetriminoManager.PrintHoldTetrimino(self.__screen)
 			self.__tetriminoManager.PrintTetriminoQueue(self.__screen)
+			self.__tetriminoManager.PrintGhostTetrimino(self.__screen,self.__boardManager.GetBoard())
 			self.__gameFrame = self.__gameFrame + 1#게임의 프레임수(자동 이동에 쓰임)
 			self.__tetriminoManager.PrintPresentTetrimino(self.__screen)#현재 조작하는 테트리미노를 출력
 			self.__boardManager.PrintBoard(self.__screen)#쌓여있는 Board를 출력

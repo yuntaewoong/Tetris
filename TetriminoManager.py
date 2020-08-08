@@ -36,6 +36,7 @@ class TetriminoManager:
 		#홀드된 미노가 없을때
 		if self.__holdTetrimino == 0:
 			self.__holdTetrimino = copy.deepcopy(tetrimino)
+			self.__holdTetrimino.SetIsHoldPossible(False)
 			self.DequeueTetrimino()
 			self.EnqueueTetrimino()
 		#홀드된 미노가 있을때
@@ -57,7 +58,6 @@ class TetriminoManager:
 	def PrintPresentTetrimino(self,screen):
 		centerLocation = self.__tetriminoQueue[0].GetLocation()
 		printList = self.__tetriminoQueue[0].GetPrintInfo()
-
 		topLeftLocation = (centerLocation[0] - len(printList)//2 , centerLocation[1] - len(printList[0])//2)
 		for i in range(0,len(printList)):
 			for j in range(0,len(printList[i])):
@@ -84,4 +84,16 @@ class TetriminoManager:
 				for k in range(0,len(printInfo[z])): 
 					if printInfo[z][k] == 1:
 						pygame.draw.rect(screen,self.__holdTetrimino.GetColor(),pygame.Rect((ConstValue.SCREEN_LEFT_SPACE-ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT)/2+ k * ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT/4,ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE  + (z+1) * ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT/4,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT/4,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT/4))
+	def PrintGhostTetrimino(self,screen,board):
+		#하드드롭시 떨어질 위치에 ghostmino출력
+		ghostTetrimino = copy.deepcopy(self.__tetriminoQueue[0])
+		while ghostTetrimino.IsMovingDownPossible(board):
+			ghostTetrimino.MoveDown(board)
+		ghostCenterLocation = ghostTetrimino.GetLocation()
+		printList = ghostTetrimino.GetPrintInfo()
+		topLeftLocation = (ghostCenterLocation[0] - len(printList)//2 , ghostCenterLocation[1] - len(printList[0])//2)
+		for i in range(0,len(printList)):
+			for j in range(0,len(printList[i])):
+				if printList[i][j] == 1:
+					pygame.draw.rect(screen,self.__tetriminoQueue[0].GetColor(),pygame.Rect(self.__Location2Screen((topLeftLocation[0]+i-2,topLeftLocation[1]+j-ConstValue.EXTRABOARDWIDTH//2)),(ConstValue.SCREEN_MINO_WIDTH,ConstValue.SCREEN_MINO_HEIGHT)),1)
 
