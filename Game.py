@@ -10,6 +10,9 @@ class Game:
 	'''
 	__clock = 0
 	__screen = 0
+	__font = 0
+	__textSurface = 0
+	__timeSurface = 0
 	__tetriminoManager = 0
 	__boardManager = 0
 	__pressedKey = 0
@@ -25,12 +28,18 @@ class Game:
 		self.__clock = pygame.time.Clock()
 		self.__tetriminoManager = TetriminoManager.TetriminoManager()
 		self.__boardManager = BoardManager.BoardManager() 
+		self.__font = pygame.font.SysFont('Comic Sans MS', 30)
+		self.__textSurface = self.__font.render('Hold', False, (255,255,255))
 		self.__UpdateLoop()
 	def __UpdateLoop(self):
 		while True:
+			
 			self.__clock.tick(ConstValue.FRAMERATE)#초당 프레임수 설정
 			self.__screen.fill((0,0,0))#화면 지우기
 			self.__DrawingBackGround()#백그라운드 배경(변하지않는요소그리기)
+			self.__timeSurface = self.__font.render('Time: '+str(self.__gameFrame//ConstValue.FRAMERATE), False, (255,255,255))
+			self.__screen.blit(self.__textSurface,(ConstValue.SCREEN_LEFT_SPACE/2 - 20,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT+ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE+20))
+			self.__screen.blit(self.__timeSurface,(ConstValue.SCREEN_LEFT_SPACE/2 - 40,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT+ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE+40))
 			self.__tetriminoManager.PrintHoldTetrimino(self.__screen)
 			self.__tetriminoManager.PrintTetriminoQueue(self.__screen)
 			self.__tetriminoManager.PrintGhostTetrimino(self.__screen,self.__boardManager.GetBoard())
