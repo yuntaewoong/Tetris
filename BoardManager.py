@@ -16,6 +16,7 @@ class BoardState(IntEnum):
 
 class BoardManager:
 	__board = []
+	__clearedLines = 0
 	def __init__(self):
 		for i in range(0,ConstValue.BOARDHEIGHT + ConstValue.EXTRABOARDHEIGHT):
 			self.__board.append([])
@@ -31,6 +32,8 @@ class BoardManager:
 						self.__board[i].append(BoardState.EMPTY)
 	def GetBoard(self):
 		return self.__board
+	def GetClearedLines(self):
+		return self.__clearedLines
 	#board에 mino를 쌓음
 	def StackingMino(self,centerLocation,printInfo,color):
 		for i in range(0,len(printInfo)):
@@ -66,6 +69,7 @@ class BoardManager:
 		for i in rowsTodelete:
 			del self.__board[i-numOfDeletedLines]#행을 지울때마다 원래index보다 하나씩 더 줄어든 인덱스를 지워야함
 			numOfDeletedLines += 1 
+		self.__clearedLines += numOfDeletedLines
 	def __AddNewLinesOnTop(self,numOfLines):
 		for i in range(0,numOfLines):
 			newRow = []

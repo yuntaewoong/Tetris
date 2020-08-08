@@ -13,6 +13,7 @@ class Game:
 	__font = 0
 	__textSurface = 0
 	__timeSurface = 0
+	__lineSurface = 0
 	__tetriminoManager = 0
 	__boardManager = 0
 	__pressedKey = 0
@@ -38,8 +39,10 @@ class Game:
 			self.__screen.fill((0,0,0))#화면 지우기
 			self.__DrawingBackGround()#백그라운드 배경(변하지않는요소그리기)
 			self.__timeSurface = self.__font.render('Time: '+str(self.__gameFrame//ConstValue.FRAMERATE), False, (255,255,255))
+			self.__lineSurface = self.__font.render('Cleared Lines:'+str(self.__boardManager.GetClearedLines()),False,(255,255,255))
 			self.__screen.blit(self.__textSurface,(ConstValue.SCREEN_LEFT_SPACE/2 - 20,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT+ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE+20))
 			self.__screen.blit(self.__timeSurface,(ConstValue.SCREEN_LEFT_SPACE/2 - 40,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT+ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE+40))
+			self.__screen.blit(self.__lineSurface,(ConstValue.SCREEN_LEFT_SPACE/2 - 70,ConstValue.SCREEN_MINORECT_WIDTHANDHEIGHT+ConstValue.SCREEN_MINORECT_TOP_BOTTOM_SPACE+60))
 			self.__tetriminoManager.PrintHoldTetrimino(self.__screen)
 			self.__tetriminoManager.PrintTetriminoQueue(self.__screen)
 			self.__tetriminoManager.PrintGhostTetrimino(self.__screen,self.__boardManager.GetBoard())
